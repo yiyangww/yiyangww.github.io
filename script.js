@@ -1,13 +1,15 @@
 // ====== Dark Mode Toggle ======
-const toggleBtn = document.getElementById("toggle-dark");
-const body = document.body;
+let toggleBtn;
+let body;
 
 // ====== Mobile Navigation ======
-const mobileMenuToggle = document.getElementById("mobile-menu-toggle");
-const mobileNav = document.getElementById("mobile-nav");
+let mobileMenuToggle;
+let mobileNav;
 
 // Initialize theme based on user preference or saved preference
 function initializeTheme() {
+  if (!body || !toggleBtn) return;
+
   const savedTheme = localStorage.getItem("theme");
   const prefersDark =
     window.matchMedia &&
@@ -24,57 +26,74 @@ function initializeTheme() {
   }
 }
 
-// Toggle theme and save preference
-toggleBtn.addEventListener("click", () => {
-  body.classList.toggle("dark");
-  body.classList.toggle("light");
+// Initialize elements when DOM is ready
+function initializeElements() {
+  toggleBtn = document.getElementById("toggle-dark");
+  body = document.body;
+  mobileMenuToggle = document.getElementById("mobile-menu-toggle");
+  mobileNav = document.getElementById("mobile-nav");
 
-  // Save theme preference
-  const currentTheme = body.classList.contains("dark") ? "dark" : "light";
-  localStorage.setItem("theme", currentTheme);
+  if (toggleBtn) {
+    toggleBtn.addEventListener("click", () => {
+      if (!body) return;
+      body.classList.toggle("dark");
+      body.classList.toggle("light");
 
-  // Update button icon
-  toggleBtn.textContent = "";
-});
+      // Save theme preference
+      const currentTheme = body.classList.contains("dark") ? "dark" : "light";
+      localStorage.setItem("theme", currentTheme);
 
-// Initialize theme on page load
-initializeTheme();
-
-// ====== Mobile Menu Toggle ======
-mobileMenuToggle.addEventListener("click", () => {
-  mobileNav.classList.toggle("active");
-  const icon = mobileMenuToggle.querySelector("i");
-  if (mobileNav.classList.contains("active")) {
-    icon.classList.remove("fa-bars");
-    icon.classList.add("fa-times");
-  } else {
-    icon.classList.remove("fa-times");
-    icon.classList.add("fa-bars");
+      // Update button icon
+      toggleBtn.textContent = "";
+    });
   }
-});
 
-// Close mobile menu when clicking on a link
-document.querySelectorAll(".mobile-nav-links a").forEach((link) => {
-  link.addEventListener("click", () => {
-    mobileNav.classList.remove("active");
-    const icon = mobileMenuToggle.querySelector("i");
-    icon.classList.remove("fa-times");
-    icon.classList.add("fa-bars");
+  if (mobileMenuToggle && mobileNav) {
+    mobileMenuToggle.addEventListener("click", () => {
+      mobileNav.classList.toggle("active");
+      const icon = mobileMenuToggle.querySelector("i");
+      if (mobileNav.classList.contains("active")) {
+        icon.classList.remove("fa-bars");
+        icon.classList.add("fa-times");
+      } else {
+        icon.classList.remove("fa-times");
+        icon.classList.add("fa-bars");
+      }
+    });
+  }
+
+  // Close mobile menu when clicking on a link
+  document.querySelectorAll(".mobile-nav-links a").forEach((link) => {
+    link.addEventListener("click", () => {
+      if (mobileNav && mobileMenuToggle) {
+        mobileNav.classList.remove("active");
+        const icon = mobileMenuToggle.querySelector("i");
+        icon.classList.remove("fa-times");
+        icon.classList.add("fa-bars");
+      }
+    });
   });
-});
 
-// Close mobile menu when clicking outside
-document.addEventListener("click", (e) => {
-  if (!mobileMenuToggle.contains(e.target) && !mobileNav.contains(e.target)) {
-    mobileNav.classList.remove("active");
-    const icon = mobileMenuToggle.querySelector("i");
-    icon.classList.remove("fa-times");
-    icon.classList.add("fa-bars");
-  }
-});
+  // Close mobile menu when clicking outside
+  document.addEventListener("click", (e) => {
+    if (
+      mobileMenuToggle &&
+      mobileNav &&
+      !mobileMenuToggle.contains(e.target) &&
+      !mobileNav.contains(e.target)
+    ) {
+      mobileNav.classList.remove("active");
+      const icon = mobileMenuToggle.querySelector("i");
+      icon.classList.remove("fa-times");
+      icon.classList.add("fa-bars");
+    }
+  });
+}
 
 // ====== Page Navigation ======
 function showPage(pageId) {
+  if (!pageId) return;
+
   // Hide all sections
   const allSections = document.querySelectorAll("main, section");
   allSections.forEach((section) => {
@@ -87,11 +106,20 @@ function showPage(pageId) {
     targetPage.style.display = "block";
   }
 
-  // Update browser history with hash
-  window.history.pushState({ page: pageId }, "", pageId);
+  // Update browser history with hash (only if supported)
+  if (window.history && window.history.pushState) {
+    try {
+      window.history.pushState({ page: pageId }, "", pageId);
+    } catch (e) {
+      // Fallback for older browsers
+      window.location.hash = pageId;
+    }
+  }
 
   // Scroll to top
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  if (window.scrollTo) {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 }
 
 // ====== Navigation Links ======
@@ -263,6 +291,9 @@ window.addEventListener("scroll", debouncedScrollHandler);
 
 // ====== Initialize all features ======
 document.addEventListener("DOMContentLoaded", () => {
+  // Initialize elements first
+  initializeElements();
+
   // Initialize theme
   initializeTheme();
 
@@ -301,41 +332,50 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ====== Add CSS for animations ======
-const style = document.createElement("style");
-style.textContent = `
-  .nav-links a.active {
-    background: var(--bg-secondary);
-    color: var(--primary-color);
+function addDynamicStyles() {
+  try {
+    const style = document.createElement("style");
+    style.textContent = `
+      .nav-links a.active {
+        background: var(--bg-secondary);
+        color: var(--primary-color);
+      }
+      
+      .navbar.scrolled {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+      }
+      
+      body.dark .navbar.scrolled {
+        background: rgba(15, 23, 42, 0.95);
+      }
+      
+      .project-card, .timeline-item, .skill-category, .contact-item {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.6s ease;
+      }
+      
+      .project-card.animate-in, .timeline-item.animate-in, 
+      .skill-category.animate-in, .contact-item.animate-in {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      
+      body.loaded {
+        animation: fadeIn 0.5s ease-in;
+      }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+    `;
+    document.head.appendChild(style);
+  } catch (e) {
+    console.warn("Could not add dynamic styles:", e);
   }
-  
-  .navbar.scrolled {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-  }
-  
-  body.dark .navbar.scrolled {
-    background: rgba(15, 23, 42, 0.95);
-  }
-  
-  .project-card, .timeline-item, .skill-category, .contact-item {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.6s ease;
-  }
-  
-  .project-card.animate-in, .timeline-item.animate-in, 
-  .skill-category.animate-in, .contact-item.animate-in {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  
-  body.loaded {
-    animation: fadeIn 0.5s ease-in;
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-`;
-document.head.appendChild(style);
+}
+
+// Initialize dynamic styles
+addDynamicStyles();
