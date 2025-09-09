@@ -595,7 +595,80 @@ body.dark .dark-btn {
   font-size: 0.9rem;
 }
 
+/* ====== Mobile Navigation ====== */
+.mobile-menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: var(--transition);
+}
+
+.mobile-menu-toggle:hover {
+  color: var(--accent-color);
+}
+
+.mobile-nav {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+}
+
+.mobile-nav.active {
+  display: block;
+}
+
+.mobile-nav-links {
+  list-style: none;
+  padding: 1rem;
+  margin: 0;
+}
+
+.mobile-nav-links li {
+  margin-bottom: 0.5rem;
+}
+
+.mobile-nav-links a {
+  display: block;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  border-radius: var(--border-radius);
+  transition: var(--transition);
+}
+
+.mobile-nav-links a:hover {
+  background: var(--bg-tertiary);
+  color: var(--accent-color);
+}
+
 /* ====== Responsive Design ====== */
+/* Large tablets and small desktops */
+@media (max-width: 1024px) {
+  .container {
+    padding: 0 1.5rem;
+  }
+  
+  .content-frame {
+    padding: 2.5rem;
+  }
+  
+  .profile-section {
+    gap: 2.5rem;
+  }
+}
+
+/* Tablets */
 @media (max-width: 768px) {
   .navbar {
     padding: 1rem 0;
@@ -603,10 +676,15 @@ body.dark .dark-btn {
   
   .navbar-content {
     padding: 0 1rem;
+    position: relative;
   }
   
   .navbar .nav-links {
     display: none;
+  }
+  
+  .mobile-menu-toggle {
+    display: block;
   }
   
   .main-content {
@@ -614,11 +692,15 @@ body.dark .dark-btn {
   }
   
   .content-frame {
-    padding: 2rem;
+    padding: 1.5rem;
   }
   
   .section {
     padding: 1rem;
+  }
+  
+  .section .content-frame {
+    padding: 1.5rem;
   }
   
   .profile-section {
@@ -641,8 +723,6 @@ body.dark .dark-btn {
     justify-content: center;
   }
   
-  
-  
   .projects-grid {
     grid-template-columns: 1fr;
   }
@@ -657,6 +737,122 @@ body.dark .dark-btn {
   
   .container {
     padding: 0 1rem;
+  }
+  
+  .experience-item {
+    margin-bottom: 2rem;
+  }
+  
+  .experience-item h3 {
+    font-size: 1.2rem;
+  }
+  
+  .experience-item h4 {
+    font-size: 0.95rem;
+  }
+  
+  .project-card {
+    padding: 1.5rem;
+  }
+  
+  .project-header h3 {
+    font-size: 1.1rem;
+  }
+}
+
+/* Mobile phones */
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0.75rem 0;
+  }
+  
+  .navbar-content {
+    padding: 0 0.75rem;
+  }
+  
+  .logo {
+    font-size: 1.1rem;
+  }
+  
+  .main-content {
+    padding: 0.75rem;
+  }
+  
+  .content-frame {
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  
+  .section {
+    padding: 0.75rem;
+  }
+  
+  .section .content-frame {
+    padding: 1rem;
+  }
+  
+  .profile-photo {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .intro-text {
+    font-size: 0.95rem;
+  }
+  
+  .about-text {
+    font-size: 0.95rem;
+  }
+  
+  .experience-item h3 {
+    font-size: 1.1rem;
+  }
+  
+  .experience-item h4 {
+    font-size: 0.9rem;
+  }
+  
+  .experience-item li {
+    font-size: 0.9rem;
+  }
+  
+  .project-card {
+    padding: 1rem;
+  }
+  
+  .project-header h3 {
+    font-size: 1rem;
+  }
+  
+  .project-card p {
+    font-size: 0.9rem;
+  }
+  
+  .tech-tag {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+  }
+  
+  .semester h5 {
+    font-size: 1.1rem;
+  }
+  
+  .semester li {
+    font-size: 0.9rem;
+  }
+  
+  .award-entry {
+    font-size: 0.9rem;
+  }
+  
+  .contact-icon {
+    width: 1.8rem;
+    height: 1.8rem;
+    font-size: 1.1rem;
+  }
+  
+  .container {
+    padding: 0 0.75rem;
   }
 }
 

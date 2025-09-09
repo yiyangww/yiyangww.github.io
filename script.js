@@ -2,6 +2,10 @@
 const toggleBtn = document.getElementById("toggle-dark");
 const body = document.body;
 
+// ====== Mobile Navigation ======
+const mobileMenuToggle = document.getElementById("mobile-menu-toggle");
+const mobileNav = document.getElementById("mobile-nav");
+
 // Initialize theme based on user preference or saved preference
 function initializeTheme() {
   const savedTheme = localStorage.getItem("theme");
@@ -35,6 +39,39 @@ toggleBtn.addEventListener("click", () => {
 
 // Initialize theme on page load
 initializeTheme();
+
+// ====== Mobile Menu Toggle ======
+mobileMenuToggle.addEventListener("click", () => {
+  mobileNav.classList.toggle("active");
+  const icon = mobileMenuToggle.querySelector("i");
+  if (mobileNav.classList.contains("active")) {
+    icon.classList.remove("fa-bars");
+    icon.classList.add("fa-times");
+  } else {
+    icon.classList.remove("fa-times");
+    icon.classList.add("fa-bars");
+  }
+});
+
+// Close mobile menu when clicking on a link
+document.querySelectorAll(".mobile-nav-links a").forEach((link) => {
+  link.addEventListener("click", () => {
+    mobileNav.classList.remove("active");
+    const icon = mobileMenuToggle.querySelector("i");
+    icon.classList.remove("fa-times");
+    icon.classList.add("fa-bars");
+  });
+});
+
+// Close mobile menu when clicking outside
+document.addEventListener("click", (e) => {
+  if (!mobileMenuToggle.contains(e.target) && !mobileNav.contains(e.target)) {
+    mobileNav.classList.remove("active");
+    const icon = mobileMenuToggle.querySelector("i");
+    icon.classList.remove("fa-times");
+    icon.classList.add("fa-bars");
+  }
+});
 
 // ====== Page Navigation ======
 function showPage(pageId) {
