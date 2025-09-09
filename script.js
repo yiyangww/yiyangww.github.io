@@ -62,6 +62,15 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener("click", function (e) {
     e.preventDefault();
     const targetId = this.getAttribute("href");
+
+    // Remove active class from all nav links
+    document.querySelectorAll(".nav-links a").forEach((link) => {
+      link.classList.remove("active");
+    });
+
+    // Add active class to clicked link
+    this.classList.add("active");
+
     showPage(targetId);
   });
 });
