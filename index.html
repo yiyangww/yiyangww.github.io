@@ -18,26 +18,14 @@
           <div class="breathing-light"></div>
         </a>
       </div>
-      <ul class="nav-links">
+    <ul class="nav-links">
         <li><a href="#professional">Experience</a></li>
         <li><a href="#teaching">Teaching</a></li>
-        <li><a href="#projects">Projects</a></li>
+      <li><a href="#projects">Projects</a></li>
         <li><a href="#awards">Awards</a></li>
-      </ul>
+    </ul>
       <div class="nav-divider"></div>
       <button id="toggle-dark" class="dark-btn"></button>
-      <button class="mobile-menu-toggle" id="mobile-menu-toggle">
-        <i class="fas fa-bars"></i>
-      </button>
-    </div>
-    <!-- Mobile Navigation Menu -->
-    <div class="mobile-nav" id="mobile-nav">
-      <ul class="mobile-nav-links">
-        <li><a href="#professional">Experience</a></li>
-        <li><a href="#teaching">Teaching</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#awards">Awards</a></li>
-      </ul>
     </div>
   </nav>
 
@@ -270,34 +258,5 @@
   </footer>
 
   <script src="script.js"></script>
-  
-  <!-- Debug information (remove in production) -->
-  <script>
-    // Simple debug info for GitHub Pages
-    console.log('Page loaded successfully');
-    console.log('Script.js loaded:', typeof showPage !== 'undefined');
-    console.log('DOM ready:', document.readyState);
-    
-    // Check if all required elements exist
-    setTimeout(() => {
-      const elements = {
-        'toggle-dark': document.getElementById('toggle-dark'),
-        'mobile-menu-toggle': document.getElementById('mobile-menu-toggle'),
-        'mobile-nav': document.getElementById('mobile-nav'),
-        'home-content': document.getElementById('home-content'),
-        'professional': document.getElementById('professional')
-      };
-      
-      console.log('Element check:', elements);
-      
-      // Check for any missing elements
-      const missing = Object.entries(elements).filter(([name, el]) => !el);
-      if (missing.length > 0) {
-        console.warn('Missing elements:', missing.map(([name]) => name));
-      } else {
-        console.log('All required elements found');
-      }
-    }, 100);
-  </script>
 </body>
 </html>
