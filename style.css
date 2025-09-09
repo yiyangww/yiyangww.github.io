@@ -140,7 +140,7 @@ main, section {
 }
 
 .navbar .nav-links a:hover {
-  color: var(--primary-color);
+  color: var(--accent-color);
 }
 
 .nav-divider {
