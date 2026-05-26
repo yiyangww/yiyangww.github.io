@@ -1,3 +1,82 @@
+// ====== Language Toggle ======
+const langBtn = document.getElementById("toggle-lang");
+const resumeLink = document.getElementById("resume-link");
+const translationsEn = {};
+let currentLang = "en";
+
+function captureEnglishTranslations() {
+  translationsEn.title = document.title;
+
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const key = el.dataset.i18n;
+    translationsEn[key] = el.hasAttribute("data-i18n-html")
+      ? el.innerHTML.trim()
+      : el.textContent.trim();
+  });
+
+  document.querySelectorAll("[data-i18n-title]").forEach((el) => {
+    translationsEn[el.dataset.i18nTitle] = el.title;
+  });
+}
+
+function applyLanguage(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const key = el.dataset.i18n;
+    const text =
+      lang === "zh" ? translationsZh[key] : translationsEn[key];
+    if (text === undefined) return;
+    if (el.hasAttribute("data-i18n-html")) {
+      el.innerHTML = text;
+    } else {
+      el.textContent = text;
+    }
+  });
+
+  document.querySelectorAll("[data-i18n-title]").forEach((el) => {
+    const key = el.dataset.i18nTitle;
+    const text =
+      lang === "zh" ? translationsZh[key] : translationsEn[key];
+    if (text) el.title = text;
+  });
+
+  if (translationsZh.title) {
+    document.title =
+      lang === "zh" ? translationsZh.title : translationsEn.title;
+  }
+
+  if (resumeLink) {
+    resumeLink.href = "yiyang_chn.pdf";
+    resumeLink.download = "yiyang_chn.pdf";
+  }
+
+  if (langBtn) {
+    const isZh = lang === "zh";
+    langBtn.textContent = isZh ? "EN" : "译";
+    langBtn.title = isZh ? "Switch to English" : "切换为中文";
+    langBtn.setAttribute("aria-label", langBtn.title);
+    langBtn.classList.toggle("lang-active", isZh);
+  }
+
+  localStorage.setItem("lang", lang);
+}
+
+function initializeLanguage() {
+  captureEnglishTranslations();
+  const savedLang = localStorage.getItem("lang");
+  if (savedLang === "zh") {
+    applyLanguage("zh");
+  }
+}
+
+if (langBtn) {
+  langBtn.addEventListener("click", () => {
+    applyLanguage(currentLang === "zh" ? "en" : "zh");
+  });
+}
+
 // ====== Dark Mode Toggle ======
 const toggleBtn = document.getElementById("toggle-dark");
 const body = document.body;
@@ -235,8 +314,9 @@ window.addEventListener("scroll", debouncedScrollHandler);
 
 // ====== Initialize all features ======
 document.addEventListener("DOMContentLoaded", () => {
-  // Initialize theme
+  // Initialize theme and language
   initializeTheme();
+  initializeLanguage();
 
   // Check if there's a hash in the URL and show corresponding page
   const currentHash = window.location.hash;
